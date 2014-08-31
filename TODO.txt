@@ -1,0 +1,33 @@
+## GitHub TODO
+- Create documentation
+- Merge TODO with GitHub Issues
+
+## Forum TODO
+- Add IM support
+- Add PM's
+- Forgot Password
+- Facebook and Twitter intergration
+- Important/Sticky/Announcements
+- Minimize/Maximize forum categories and save by user settings, not just cookies?	
+- Jump to forum
+- Polls
+- Ban Network, a trusted site bans a user, and updates other forums that this user should be banned.
+- More Forum Statistics page
+- Most users ever online at once?
+- Private Messages
+- BBCode quote
+- Member List
+- Edit first post in a topic lets you change the title
+	WYSIWYG?
+	Syntax Highlighting
+- Search (Filter by type and date)
+- Profile contact (PM, etc.)
+
+## Admin TODO
+Admin:
+-Home
+	Upgrade/Version checker
+-Users
+	Add / Edit / Delete
+-Forum
+	Delete (test)
