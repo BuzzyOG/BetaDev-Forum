@@ -22,6 +22,7 @@
 	Syntax Highlighting
 - Search (Filter by type and date)
 - Profile contact (PM, etc.)
+- Finish coding in dynamic Themes
 
 ## Admin TODO
 Admin:

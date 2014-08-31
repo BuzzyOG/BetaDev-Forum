@@ -195,5 +195,17 @@ class functions{
 		else
 			return $this->usersDisplayed[$id];
 	}
+	function getTheme(){
+		$query = "SELECT Theme.name
+			FROM ".TBL_PREFIX."themes as Theme
+			INNER JOIN ".TBL_PREFIX."config AS Config
+			ON Theme.id=Config.value
+			WHERE Theme.id=Config.value";
+		$query = $this->super->db->query($query);
+		if ($this->super->db->getRowCount($query)){
+			$theme = $this->super->db->fetch_assoc($query);
+			return $theme['name'];
+		}
+	}
 }
 ?>

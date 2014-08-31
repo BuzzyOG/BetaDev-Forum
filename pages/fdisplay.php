@@ -31,6 +31,7 @@ class fDisplay extends forumPage{
 	protected $currentForum;
 	protected $noForum;
 	protected $escapedId;
+	private $theme;
 	public function __construct(){
 		$this->noForum = false;
 		parent::__construct();
@@ -55,6 +56,7 @@ class fDisplay extends forumPage{
 			$GLOBALS['super']->db->query($hits);
 			header('Location: '.$this->currentForum['redirectURL']);
 		}
+		$this->theme = $GLOBALS['super']->functions->getTheme();
 	}
 	public function getJS(){
 		$js = parent::getJS();
@@ -83,18 +85,18 @@ class fDisplay extends forumPage{
 			return;
 		}else{
 			if ($this->currentForum['is_cat'] == 1){
-				$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
+				$error = new tpl(ROOT_PATH."themes/{$this->theme}/templates/error.php");
 				$error->add("error_message", "This forum is marked as a category and does not accept posts.");
 				echo $error->parse();
 			}elseif ($this->noForum){
-				$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
+				$error = new tpl(ROOT_PATH."themes/{$this->theme}/templates/error.php");
 				$error->add("error_message", "You have reached this page in error.<br />Please go back and try again.");
 				echo $error->parse();
 			}
 			require_once(ROOT_PATH.'includes/classes/forum_display.php');
 			$displayForum = new showForums($this->escapedId, "Sub-Forums");
 			$displayForum->display(false);
-			$topBar = new tpl(ROOT_PATH.'themes/Default/templates/forum_infobar.php');
+			$topBar = new tpl(ROOT_PATH."themes/{$this->theme}/templates/forum_infobar.php");
 			$topBar->add("forum_name",$this->currentForum['name']);
 			if ($this->currentForum['description'] != "")
 				$hasDescription = "true";
@@ -130,7 +132,7 @@ class fDisplay extends forumPage{
 			$topic_sql = "SELECT * FROM ".TBL_PREFIX."topics WHERE `forum_id`=".$this->currentForum['id']." ORDER BY `time_modified` DESC LIMIT ".$startPost.", ".$topicsPerPage;
 			$topics = $GLOBALS['super']->db->query($topic_sql);
 			if ($GLOBALS['super']->db->getRowCount($topics) > 0){
-				$topicRow = new tpl(ROOT_PATH.'themes/Default/templates/forum_topicrow.php');
+				$topicRow = new tpl(ROOT_PATH."themes/{$this->theme}/templates/forum_topicrow.php");
 				$canMod = false;
 				while($topic = $GLOBALS['super']->db->fetch_assoc($topics)){
 					$poster = $GLOBALS['super']->functions->getUser($topic['user_id'], true);
@@ -143,9 +145,9 @@ class fDisplay extends forumPage{
 					$preview = str_replace("\n", " ", $preview);
 					$preview = $bbCode->stripBBCode($preview);
 					$preview = dotdotdot($preview, 115);
-					$image = FORUM_ROOT."themes/Default/images/icon_old.gif";
+					$image = "themes/{$this->theme}/images/icon_old.gif";
 					if ($lastPostTime > $GLOBALS['super']->user->read_time && !$GLOBALS['super']->user->has_viewed_topic($topic['id']))
-						$image = FORUM_ROOT."themes/Default/images/icon_new.gif";
+						$image = "themes/{$this->theme}/images/icon_new.gif";
 					$canDelete = ($GLOBALS['super']->user->can("Forum".$this->currentForum['id'], "DeleteOthers") && $topic['user_id'] != $GLOBALS['super']->user->id)
 								|| ($GLOBALS['super']->user->can("Forum".$this->currentForum['id'], "DeleteSelf") && $topic['user_id'] == $GLOBALS['super']->user->id);
 					if ($canDelete && !$canMod)
@@ -168,7 +170,7 @@ class fDisplay extends forumPage{
 				$topicRow->add("canMod", $canMod);
 				echo $topicRow->parse();
 			}else{
-				$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
+				$error = new tpl(ROOT_PATH."themes/{$this->theme}/templates/error.php");
 				$error->add("error_message", "This forum currently has no topics.");
 				echo $error->parse();
 			}

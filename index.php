@@ -111,9 +111,11 @@ switch($current_page){
 		break;
 }
 $super->user->updateActive($pageClass);
+$styleSheet = $super->functions->getTheme();
+$styleDir = 'themes/'.$styleSheet;
 $Doctype_normal = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
 $Doctype_mobile = '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">';
-$header = new tpl(ROOT_PATH.'themes/Default/templates/header.php');
+$header = new tpl(ROOT_PATH.$styleDir.'/templates/header.php');
 $header->add("TITLE", $pageClass->getTitle());
 $isIphone = false;
 $isIpod = false;
@@ -125,8 +127,6 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && ($isIpod || $isIphone))
 	$header->add("DOCTYPE", $Doctype_mobile);
 else
 	$header->add("DOCTYPE", $Doctype_normal);
-$styleSheet = "Default";
-$styleDir = 'themes/'.$styleSheet;
 $css = $pageClass->getCSS();
 if (isset($_SERVER['HTTP_USER_AGENT']) && ($isIpod || $isIphone) && file_exists($styleDir.'/iPhone.css')){
 	$css[] = array('path' => $styleDir.'/iPhone.css');
@@ -136,7 +136,7 @@ $header->add("STYLESHEET", $styleSheet);
 $js = $pageClass->getJS();
 $header->add("SCRIPTS", $js);
 echo $header->parse();
-$nav = new tpl(ROOT_PATH.'themes/Default/templates/navbar.php');
+$nav = new tpl(ROOT_PATH.$styleDir.'/templates/navbar.php');
 $nav->add("act", $current_page);
 $menu[] = array("act" => "home", "name" => "Home", "url" => "index.php");
 if ($super->user->can("ViewAdmin")){
@@ -151,7 +151,7 @@ if (!$super->user->isLogged()){
 	$menu[] = array("act" => "logout", "name" => "Logout", "url" => "index.php?act=login&amp;do=out");
 $nav->add("MENU", $menu);
 echo $nav->parse();
-$userbar = new tpl(ROOT_PATH.'themes/Default/templates/userbar.php');
+$userbar = new tpl(ROOT_PATH.$styleDir.'/templates/userbar.php');
 $username = $super->user->username;
 $displayname = $super->user->displayname;
 if (isset($displayname) && $displayname != "")
@@ -164,7 +164,7 @@ $userbar->add("USERID", $super->user->id);
 $userbar->add("USERNAME_DISPLAYNAME", $user_display);
 echo $userbar->parse();
 echo $pageClass->display();
-$footer = new tpl(ROOT_PATH.'themes/Default/templates/footer.php');
+$footer = new tpl(ROOT_PATH.$styleDir.'/templates/footer.php');
 $curTime = date("g:i A");
 $footer->add("time", $curTime);
 $usersOnPage = "SELECT * FROM ".TBL_PREFIX."online WHERE page='".$GLOBALS['super']->db->escape($pageClass->onlineName())."' AND userid != 0";

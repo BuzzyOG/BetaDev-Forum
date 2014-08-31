@@ -20,7 +20,9 @@
  */
 error_reporting(E_ALL);
 ob_start();
-set_magic_quotes_runtime(false);
+if(get_magic_quotes_runtime()){
+    set_magic_quotes_runtime(false);
+}
 define('DEBUG', 'false');
 define('PAGE_PARSE_START_TIME', microtime());
 $debug = array();

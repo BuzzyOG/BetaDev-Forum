@@ -21,6 +21,7 @@
 define("SEC", true);
 define("INCLUDED", 1);
 define("ROOT_PATH", dirname( __FILE__ ) ."/");
+define("VERSION", 1.01);
 require_once('../includes/classes/dconnect.php');
 require_once('../includes/classes/functions.php');
 class Installer{
@@ -55,7 +56,7 @@ class Installer{
 			'header' => "Content-type: application/x-www-form-urlencoded",
 			'content' => $data
 		));
-		$url = "http://67.212.165.114/~betadev/";
+		$url = "http://betadev.co.uk";
 		$ctx = stream_context_create($params);
 		$fp = fopen($url, 'rb', false, $context);
 		fpassthru($fp);
@@ -135,7 +136,7 @@ define("TIMEZONENUM", "-7");
 	$queries[] =
 	"INSERT INTO ".TBL_PREFIX."config (`name`, `value`, `readonly`, `description`, `group`, `time_modified`) VALUES
 	('siteName', '".$forumname."', '0', 'The name of the website to appear in the titlebar, and at the start of breadcrumbs.', 'general', ".$timestamp."),
-	('forumVersion', '.1.00', '1', 'The version of the forum system', 'general', ".$timestamp."),
+	('forumVersion', '".VERSION."', '1', 'The version of the forum system', 'general', ".$timestamp."),
 	('defaultTheme', '1', '0', 'The default theme to use for the forum', 'general', ".$timestamp."),
 	('crumbSeperator', '&raquo;', '0', 'The seperator used in the breadcrumbs', 'general', ".$timestamp."),
 	('timeZone', 'America/Los_Angeles', '0', 'The default timezone for the board to use.', 'general', ".$timestamp."),
@@ -202,7 +203,7 @@ define("TIMEZONENUM", "-7");
 	) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
 	$queries[] =
 	"INSERT INTO ".TBL_PREFIX."images (`name`, `url`) VALUES
-	('Avatar', '".FORUM_ROOT."images/avatar_1.png');
+	('Avatar', 'images/avatar_1.png');
 	";
 	$queries[] =
 	"CREATE TABLE IF NOT EXISTS ".TBL_PREFIX."online (

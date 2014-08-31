@@ -31,6 +31,7 @@ class tDisplay extends forumPage{
 	protected $noTopic;
 	protected $currentTopic;
 	protected $currentForum;
+	private $theme;
 	public function __construct($tid = null){
 		$this->noTopic = false;
 		$this->noForum = false;
@@ -61,6 +62,7 @@ class tDisplay extends forumPage{
 		}
 		$this->currentForum = $GLOBALS['super']->db->fetch_assoc($forum);
 		$this->setName($this->currentTopic['name']);
+		$this->theme = $GLOBALS['super']->functions->getTheme();
 	}
 	public function onlineName(){
 		return "Viewing Topic: ".$this->getName();
@@ -101,14 +103,14 @@ class tDisplay extends forumPage{
 		if (!$GLOBALS['super']->user->can("ViewBoard") || !$GLOBALS['super']->user->can("Forum".$this->currentForum['id'], "View")){
 			echo $GLOBALS['super']->user->noPerm();
 		}elseif ($this->noTopic){
-			$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
+			$error = new tpl(ROOT_PATH."themes/{$this->theme}/templates/error.php");
 			$error->add("error_message", "You have reached this page in error.<br />Please go back and try again.");
 			echo $error->parse();
 		}else{
 			$updateViews = "UPDATE ".TBL_PREFIX."topics SET `view_count`=`view_count`+1 WHERE `id`=".$this->currentTopic['id'];
 			$GLOBALS['super']->db->query($updateViews);
 			$GLOBALS['super']->user->viewed_topic($this->currentTopic['id']);
-			$topBar = new tpl(ROOT_PATH.'themes/Default/templates/forum_infobar.php');
+			$topBar = new tpl(ROOT_PATH."themes/{$this->theme}/templates/forum_infobar.php");
 			$topBar->add("forum_name",$this->currentTopic['name']);
 			$topBar->add("newTopicLink", '');
 			$topBar->add("hasDescription", "true");
@@ -146,7 +148,7 @@ class tDisplay extends forumPage{
 			$post_sql = "SELECT * FROM ".TBL_PREFIX."posts WHERE `topic_id`=".$this->currentTopic['id']." ORDER BY `time_added` ASC LIMIT ".$startPost.", ".$postsPerPage;
 			$posts = $GLOBALS['super']->db->query($post_sql);
 			if ($GLOBALS['super']->db->getRowCount($posts) > 0){
-				$topicRow = new tpl(ROOT_PATH.'themes/Default/templates/postview.php');
+				$topicRow = new tpl(ROOT_PATH."themes/{$this->theme}/templates/postview.php");
 				while($post = $GLOBALS['super']->db->fetch_assoc($posts)){
 					$poster = $GLOBALS['super']->functions->getUser($post['user_id']);
 					$posterName = $poster['formatted'];
@@ -184,7 +186,7 @@ class tDisplay extends forumPage{
 				$topicRow->add("POSTS", $structure_array['POST']);
 				echo $topicRow->parse();
 			}else{
-				$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
+				$error = new tpl(ROOT_PATH."themes/{$this->theme}/templates/error.php");
 				$error->add("error_message", "An error has occurred.");
 				echo $error->parse();
 			}

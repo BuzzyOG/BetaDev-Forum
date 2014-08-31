@@ -9,7 +9,7 @@ if ($GLOBALS['super']->user->isLogged() && $GLOBALS['super']->user->can("ViewBoa
 	<table cellspacing="0" class="stat_row" id="first">
 		<tr>
 			<td class="stat_icon">
-				<img src="themes/<?php echo "Default"?>/images/icon_stats.gif" alt="" />
+				<img src="themes/Default/images/icon_stats.gif" alt="" />
 			</td>
 			<td class="stat_main">
 				<div>
@@ -21,7 +21,7 @@ if ($GLOBALS['super']->user->isLogged() && $GLOBALS['super']->user->can("ViewBoa
 		</tr>
 		<tr>
 			<td class="stat_icon">
-				<img src="themes/<?php echo "Default"?>/images/icon_users.gif" alt="" />
+				<img src="themes/Default/images/icon_users.gif" alt="" />
 			</td>
 			<td class="stat_main">
 				<div>

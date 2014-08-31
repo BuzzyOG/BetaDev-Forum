@@ -31,11 +31,13 @@ class showForums{
 	private $db;
 	private $catName;
 	private $functions;
+	private $theme;
 	function __construct($catid, $catname = ""){
 		$this->functions = $GLOBALS['super']->functions;
 		$this->db = $GLOBALS['super']->db;
 		$this->catid = $catid;
 		$this->catName = $catname;
+		$this->theme = $this->functions->getTheme();
 	}
 	function display($return = true){
 		$forum_sql = '
@@ -57,7 +59,7 @@ ORDER BY f.sort_order ASC';
 			){
 			return;
 		}
-		$content = new tpl(ROOT_PATH.'themes/Default/templates/main_forum_display.php');
+		$content = new tpl(ROOT_PATH.'themes/'.$this->theme.'/templates/main_forum_display.php');
 		$content->add("NAME", $this->catName);
 		$structure_array = array();
 		while ($forum = $this->db->fetch_assoc($forum_query)){
@@ -86,14 +88,14 @@ ORDER BY f.sort_order ASC';
 					$temparray['children'] = $childrenStr;
 				}
 				if ($forum['isRedirect'] == 1){
-					$temparray['icon'] = FORUM_ROOT."themes/Default/images/icon_redir.gif";
+					$temparray['icon'] = "themes/{$this->theme}/images/icon_redir.gif";
 					$postinfo = "Redirect";
 					$temparray['forumType'] = "redirect";
 				}else{
 					if ($forum['num_unread_count'] == 0)
-						$temparray['icon'] = FORUM_ROOT."themes/Default/images/icon_old.gif";
+						$temparray['icon'] = "themes/{$this->theme}/images/icon_old.gif";
 					else
-						$temparray['icon'] = FORUM_ROOT."themes/Default/images/icon_new.gif";
+						$temparray['icon'] = "themes/{$this->theme}/images/icon_new.gif";
 					$temparray['forumType'] = "stdForum";
 					if ($forum['last_post_id'] == 0){
 						$temparray['forumType'] = "noPosts";
