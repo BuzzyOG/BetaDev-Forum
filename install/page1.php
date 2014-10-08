@@ -147,8 +147,8 @@ if (count($errors) > 0){
 				<td class="input">
 					<input type="text" name="forumname" />
 				</td>
-			</tr
-			><tr>
+			</tr>
+			<tr>
 				<td class="info">
 					<strong>Forum URL</strong><br />
 					The full url to the forum folder with a trailing slash. Ex: http://betadev.com/forum/
