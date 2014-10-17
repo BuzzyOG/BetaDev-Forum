@@ -3,32 +3,76 @@
 - Merge TODO with GitHub Issues
 
 ## Forum TODO
-- Add IM support
-- Add PM's
-- Forgot Password
-- Facebook and Twitter intergration
-- Important/Sticky/Announcements
-- Minimize/Maximize forum categories and save by user settings, not just cookies?	
+- Thread settings
+	- Sticky
+		- Group permissions for sticky
+	- Locked
+		- Group permissions for locked
+	- Polls
+		- Group/forum permissions for polls
+- Minimize/Maximize forum categories and save by cookies	
 - Jump to forum
-- Polls
-- Ban Network, a trusted site bans a user, and updates other forums that this user should be banned.
 - More Forum Statistics page
-- Most users ever online at once?
-- Private Messages
-- BBCode quote
+	- Most users ever online at once?
 - Member List
-- Edit first post in a topic lets you change the title
-	WYSIWYG?
-	Syntax Highlighting
+- Thread posts
+	- Edit first post in a topic lets you change the title
+	- BBCode quote
+	- WYSIWYG?
+	- Syntax Highlighting (bbCode [code] [code="php"])
+	- Report post
+	- Last edited by & time
+	- If thread is locked
+	- Move thread
+	- Quick reply
+		- Box at bottom
+		- Quick reply button
+		- Quote button
+- Forum view
+	- If forum is locked
 - Search (Filter by type and date)
-- Profile contact (PM, etc.)
-- Finish coding in dynamic Themes
+- Profile
+	- Contact
+		- Private Messaging
+		- Profile comments
+	- Options
+		- Finish hidden
+			- Group permissions for hidden
+		- Email on pm's, profile comments, followed threads
+		- Displayname change permission based
+		- Auto redirect (on/off)
+	- Forgot password
+	- Multiple usergroups
+	- Usergroup badges/icons
+	- Facebook, Twitter, G+ intergration
+	- Signature
+		- bbCode in signature
+		- Limit images/image size in signature
+- Finish coding in dynamic themes
+- Tidy code
+- Dynamic updating clock
+- Add events to calendar
+- Bugs
+	- Fix "Top" button
+	- "Mark all forums as read" - change to dynamic url
+	- Hide "personal" on profiles if empty
+	- Double >> "BetaDev Minecraft » » General"
+	- Positioning bug with "Top" when viewing people on this page
 
 ## Admin TODO
 Admin:
--Home
+- General
+	- Moderator usergroup
+	- Moderator panel
+	- Fix admin pages to ADMIN_PANEL standard
+- Home
 	Upgrade/Version checker
--Users
+- Users
 	Add / Edit / Delete
--Forum
-	Delete (test)
+- Groups
+	Add / Edit / Delete
+
+## Updates TODO
+- Generate an update system
+	- Update SQL tables
+	- Modify updated files
