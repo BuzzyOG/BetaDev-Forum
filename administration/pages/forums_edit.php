@@ -73,8 +73,8 @@ class ForumsEdit extends adminSub{
 				$permarr = array();
 				$perms = $GLOBALS['super']->db->query("SELECT `value` FROM ".TBL_PREFIX."permissions WHERE `name`='Forum".$forumID."' AND `group_id`=".$group['id']);
 				if ($GLOBALS['super']->db->getRowCount($perms) > 0){
-					$perms = $GLOBALS['super']->db->fetch_result($perms);
-					$parts = explode(",",$perms);
+					$perms = $GLOBALS['super']->db->fetch_assoc($perms);
+					$parts = explode(",",$perms['value']);
 					foreach($parts as $part){
 						if ($part != ""){
 							$perm = explode(":",$part);

@@ -1,18 +1,28 @@
-<?php echo $this->DOCTYPE?>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<link rel="shortcut icon" type="image/x-icon" href="themes/Default/images/favicon.ico" /> 
+		<meta charset="UTF-8">
+		<link rel="shortcut icon" type="image/x-icon" href="themes/Default/images/favicon.ico"> 
 		<?php
-		foreach($this->STYLESHEETS as $styles){
-		?>
-		<link rel="stylesheet" type="text/css" href="<?php echo $styles['path']?>" />
-		<?php
+		$i = 1;
+		foreach( $this->STYLESHEETS as $style ) {
+			if( isset( $style[ 'path' ] ) ) {
+				?><link rel="stylesheet" type="text/css" href="<?= $style[ 'path' ]; ?>"><?php
+			}
+			if( isset( $style[ 'text' ] ) ) {
+				?><style><?= $style[ 'text' ]; ?></style><?php
+			}
+			print $i++ === count( $this->STYLESHEETS ) && count( $this->SCRIPTS ) == 0 ? "\n" : "\n		";
 		}
-		foreach($this->SCRIPTS as $script){
-		?>
-		<script type="text/javascript" src="<?php echo $script['path']?>"></script>
-		<?php
+		$i = 1;
+		foreach( $this->SCRIPTS as $script ) {
+			if( isset( $script[ 'path' ] ) ) {
+				?><script type="text/javascript" src="<?= $script[ 'path' ]; ?>"></script><?php
+			}
+			if( isset( $script[ 'text' ] ) ) {
+				?><script type="text/javascript"><?= $script[ 'text' ]; ?></script><?php
+			}
+			print $i++ === count( $this->SCRIPTS ) ? "\n" : "\n		";
 		}
 		?>
 		<title><?php echo $this->TITLE?></title>
@@ -21,6 +31,6 @@
 	<div id="container">
 		<a name="top"></a>
 		<div id="logostrip">
-			<img src="themes/<?php echo $this->STYLESHEET?>/images/header.jpg" alt="" />
+			<img src="themes/Default/images/header.jpg" alt="">
 		</div>
 		<div id="container2">

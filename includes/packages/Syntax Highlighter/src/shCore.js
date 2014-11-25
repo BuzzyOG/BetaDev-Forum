@@ -2,14 +2,12 @@
  * SyntaxHighlighter
  * http://alexgorbatchev.com/
  *
- * SyntaxHighlighter is donationware. If you are using it, please donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
- *
  * @version
- * 2.1.364 (October 15 2009)
+ * 3.0.9 modified (25/10/2014)
  * 
  * @copyright
  * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2009-2014 Cblair91
  *
  * @license
  * This file is part of SyntaxHighlighter.
@@ -36,96 +34,12 @@ if (!window.SyntaxHighlighter) var SyntaxHighlighter = function() {
 // This is a shorthand for local reference in order to avoid long namespace 
 // references to SyntaxHighlighter.whatever...
 var sh = {
-	defaults : {
-		/** Additional CSS class names to be added to highlighter elements. */
-		'class-name' : '',
-		
-		/** First line number. */
-		'first-line' : 1,
-		
-		/**
-		 * Pads line numbers. Possible values are:
-		 *
-		 *   false - don't pad line numbers.
-		 *   true  - automaticaly pad numbers with minimum required number of leading zeroes.
-		 *   [int] - length up to which pad line numbers.
-		 */
-		'pad-line-numbers' : true,
-		
-		/** Lines to highlight. */
-		'highlight' : null,
-		
-		/** Enables or disables smart tabs. */
-		'smart-tabs' : true,
-		
-		/** Gets or sets tab size. */
-		'tab-size' : 4,
-		
-		/** Enables or disables gutter. */
-		'gutter' : true,
-		
-		/** Enables or disables toolbar. */
-		'toolbar' : true,
-		
-		/** Forces code view to be collapsed. */
-		'collapse' : false,
-		
-		/** Enables or disables automatic links. */
-		'auto-links' : true,
-		
-		/** Gets or sets light mode. Equavalent to turning off gutter and toolbar. */
-		'light' : false,
-		
-		/** Enables or disables automatic line wrapping. */
-		'wrap-lines' : true,
-		
-		'html-script' : false
-	},
-	
-	config : {
-		/** Enables use of <SCRIPT type="syntaxhighlighter" /> tags. */
-		useScriptTags : true,
-		
-		/** Path to the copy to clipboard SWF file. */
-		clipboardSwf : null,
-
-		/** Width of an item in the toolbar. */
-		toolbarItemWidth : 16,
-
-		/** Height of an item in the toolbar. */
-		toolbarItemHeight : 16,
-		
-		/** Blogger mode flag. */
-		bloggerMode : false,
-		
-		stripBrs : false,
-		
-		/** Name of the tag that SyntaxHighlighter will automatically look for. */
-		tagName : 'pre',
-		
-		strings : {
-			expandSource : 'show source',
-			viewSource : 'view source',
-			copyToClipboard : 'copy to clipboard',
-			copyToClipboardConfirmation : 'The code is in your clipboard now',
-			print : 'print',
-			help : '?',
-			alert: 'SyntaxHighlighter\n\n',
-			noBrush : 'Can\'t find brush for: ',
-			brushNotHtmlScript : 'Brush wasn\'t configured for html-script option: ',
-			
-			// this is populated by the build script
-			aboutDialog : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>About SyntaxHighlighter</title></head><body style="font-family:Geneva,Arial,Helvetica,sans-serif;background-color:#fff;color:#000;font-size:1em;text-align:center;"><div style="text-align:center;margin-top:3em;"><div style="font-size:xx-large;">SyntaxHighlighter</div><div style="font-size:.75em;margin-bottom:4em;"><div>version 2.1.364 (October 15 2009)</div><div><a href="http://alexgorbatchev.com" target="_blank" style="color:#0099FF;text-decoration:none;">http://alexgorbatchev.com</a></div><div>If you like this script, please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2930402" style="color:#0099FF;text-decoration:none;">donate</a> to keep development active!</div></div><div>JavaScript code syntax highlighter.</div><div>Copyright 2004-2009 Alex Gorbatchev.</div></div></body></html>'
-		},
-
-		/** If true, output will show HTML produces instead. */
-		debug : false
-	},
+	/* Debug? */
+	debug : false,
 	
 	/** Internal 'global' variables. */
 	vars : {
 		discoveredBrushes : null,
-		spaceWidth : null,
 		printFrame : null,
 		highlighters : {}
 	},
@@ -199,25 +113,12 @@ var sh = {
 		 */
 		createButton : function(label, highlighterId, commandName)
 		{
-			var a = document.createElement('a'),
-				style = a.style,
-				config = sh.config,
-				width = config.toolbarItemWidth,
-				height = config.toolbarItemHeight
-				;
+			var a = document.createElement('a');
 			
 			a.href = '#' + commandName;
 			a.title = label;
 			a.highlighterId = highlighterId;
 			a.commandName = commandName;
-			a.innerHTML = label;
-			
-			if (isNaN(width) == false)
-				style.width = width + 'px';
-
-			if (isNaN(height) == false)
-				style.height = height + 'px';
-			
 			a.onclick = function(e)
 			{
 				try
@@ -262,25 +163,6 @@ var sh = {
 		
 		/** Collection of toolbar items. */
 		items : {
-			expandSource : function(highlighter)
-			{
-				this.create = function()
-				{
-					if (highlighter.getParam('collapse') != true)
-						return;
-					
-					return sh.config.strings.expandSource;
-				};
-			
-				this.execute = function(sender, event, args)
-				{
-					var div = highlighter.div;
-					
-					sender.parentNode.removeChild(sender);
-					div.className = div.className.replace('collapsed', '');
-				};
-			},
-		
 			/** 
 			 * Command to open a new window and display the original unformatted source code inside.
 			 */
@@ -288,7 +170,7 @@ var sh = {
 			{
 				this.create = function()
 				{
-					return sh.config.strings.viewSource;
+					return 'View Source';
 				};
 				
 				this.execute = function(sender, event, args)
@@ -304,130 +186,12 @@ var sh = {
 				};
 			},
 			
-			/**
-			 * Command to copy the original source code in to the clipboard.
-			 * Uses Flash method if <code>clipboardSwf</code> is configured.
-			 */
-			copyToClipboard : function(highlighter)
-			{
-				var flashDiv, flashSwf,
-					highlighterId = highlighter.id
-					;
-				
-				this.create = function()
-				{
-					var config = sh.config;
-					
-					// disable functionality if running locally
-					if (config.clipboardSwf == null)
-						return null;
-
-					function params(list)
-					{
-						var result = '';
-						
-						for (var name in list)
-							result += "<param name='" + name + "' value='" + list[name] + "'/>";
-							
-						return result;
-					};
-					
-					function attributes(list)
-					{
-						var result = '';
-						
-						for (var name in list)
-							result += " " + name + "='" + list[name] + "'";
-							
-						return result;
-					};
-					
-					var args1 = {
-							width				: config.toolbarItemWidth,
-							height				: config.toolbarItemHeight,
-							id					: highlighterId + '_clipboard',
-							type				: 'application/x-shockwave-flash',
-							title				: sh.config.strings.copyToClipboard
-						},
-						
-						// these arguments are used in IE's <param /> collection
-						args2 = {
-							allowScriptAccess	: 'always',
-							wmode				: 'transparent',
-							flashVars			: 'highlighterId=' + highlighterId,
-							menu				: 'false'
-						},
-						swf = config.clipboardSwf,
-						html
-					;
-
-					if (/msie/i.test(navigator.userAgent))
-					{
-						html = '<object'
-							+ attributes({
-								classid : 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000',
-								codebase : 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0'
-							})
-							+ attributes(args1)
-							+ '>'
-							+ params(args2)
-							+ params({ movie : swf })
-							+ '</object>'
-						;
-					}
-					else
-					{
-						html = '<embed'
-							+ attributes(args1)
-							+ attributes(args2)
-							+ attributes({ src : swf })
-							+ '/>'
-						;
-					}
-
-					flashDiv = document.createElement('div');
-					flashDiv.innerHTML = html;
-					
-					return flashDiv;
-				};
-				
-				this.execute = function(sender, event, args)
-				{
-					var command = args.command;
-
-					switch (command)
-					{
-						case 'get':
-							var code = sh.utils.unindent(
-								sh.utils.fixInputString(highlighter.originalCode)
-									.replace(/&lt;/g, '<')
-									.replace(/&gt;/g, '>')
-									.replace(/&amp;/g, '&')
-								);
-
-							if(window.clipboardData)
-								// will fall through to the confirmation because there isn't a break
-								window.clipboardData.setData('text', code);
-							else
-								return sh.utils.unindent(code);
-							
-						case 'ok':
-							sh.utils.alert(sh.config.strings.copyToClipboardConfirmation);
-							break;
-							
-						case 'error':
-							sh.utils.alert(args.message);
-							break;
-					}
-				};
-			},
-			
 			/** Command to print the colored source code. */
 			printSource : function(highlighter)
 			{
 				this.create = function()
 				{
-					return sh.config.strings.print;
+					return 'Print';
 				};
 				
 				this.execute = function(sender, event, args)
@@ -449,7 +213,7 @@ var sh = {
 					doc = iframe.contentWindow.document;
 					
 					copyStyles(doc, window.document);
-					doc.write('<div class="' + highlighter.div.className.replace('collapsed', '') + ' printing">' + highlighter.div.innerHTML + '</div>');
+					doc.write('<div class="' + highlighter.div.className + ' printing">' + highlighter.div.innerHTML + '</div>');
 					doc.close();
 					
 					iframe.contentWindow.focus();
@@ -471,7 +235,7 @@ var sh = {
 			{
 				this.create = function()
 				{	
-					return sh.config.strings.help;
+					return 'Help';
 				};
 
 				this.execute = function(sender, event)
@@ -480,7 +244,27 @@ var sh = {
 						doc = wnd.document
 						;
 					
-					doc.write(sh.config.strings.aboutDialog);
+					doc.write('<!DOCTYPE html> \
+<html> \
+<head> \
+	<meta charset=utf-8"> \
+	<title>About SyntaxHighlighter</title> \
+</head> \
+ \
+<body style="font-family:Geneva,Arial,Helvetica,sans-serif;background-color:#fff;color:#000;font-size:1em;text-align:center;"> \
+	<div style="text-align:center;margin-top:1.5em;"> \
+	<div style="font-size:xx-large;">SyntaxHighlighter</div> \
+	<div style="font-size:.75em;margin-bottom:3em;"> \
+		<div>Version 3.0.9 modified (25/10/2014)</div> \
+		<div><a href="http://alexgorbatchev.com/SyntaxHighlighter" target="_blank" style="color:#005896">http://alexgorbatchev.com/SyntaxHighlighter</a></div> \
+		<div><a href="http://github.com/BetaDev/BetaDev-Forum" target="_blank" style="color:#005896">http://github.com/BetaDev/BetaDev-Forum</a></div> \
+		<div>JavaScript code syntax highlighter.</div> \
+		<div>Copyright 2004-2014 Alex Gorbatchev, Cblair91.</div> \
+	</div> \
+</div> \
+ \
+</body> \
+</html>');
 					doc.close();
 					wnd.focus();
 				};
@@ -610,7 +394,7 @@ var sh = {
 		 */
 		alert: function(str)
 		{
-			alert(sh.config.strings.alert + str)
+			alert('SyntaxHighlighter\n\n'+ str)
 		},
 		
 		/**
@@ -651,7 +435,7 @@ var sh = {
 			result = sh.brushes[brushes[alias]];
 
 			if (result == null && alert != false)
-				sh.utils.alert(sh.config.strings.noBrush + alias);
+				sh.utils.alert('Can\'t find brush for: ' + alias);
 			
 			return result;
 		},
@@ -926,14 +710,7 @@ var sh = {
 		fixInputString : function(str)
 		{
 			var br = /<br\s*\/?>|&lt;br\s*\/?&gt;/gi;
-			
-			if (sh.config.bloggerMode == true)
-				str = str.replace(br, '\n');
-
-			if (sh.config.stripBrs == true)
-				str = str.replace(br, '');
-				
-			return str;
+			return str.replace(br, '');
 		},
 		
 		/**
@@ -1141,15 +918,12 @@ var sh = {
 			return result;
 		};
 		
-		var elements = element ? [element] : toArray(document.getElementsByTagName(sh.config.tagName)), 
+		var elements = element ? [element] : toArray(document.getElementsByTagName('pre')), 
 			propertyName = 'innerHTML', 
-			highlighter = null,
-			conf = sh.config
-			;
+			highlighter = null;
 
 		// support for <SCRIPT TYPE="syntaxhighlighter" /> feature
-		if (conf.useScriptTags)
-			elements = elements.concat(sh.utils.getSyntaxHighlighterScriptTags());
+		elements = elements.concat(sh.utils.getSyntaxHighlighterScriptTags());
 
 		if (elements.length === 0) 
 			return;
@@ -1169,40 +943,29 @@ var sh = {
 
 			if (brushName == null)
 				continue;
-
-			// Instantiate a brush
-			if (params['html-script'] == 'true' || sh.defaults['html-script'] == true) 
+			var brush = sh.utils.findBrush(brushName);
+				
+			if (brush)
 			{
-				highlighter = new sh.HtmlScript(brushName);
-				brushName = 'htmlscript';
+				brushName = brush.name;
+				highlighter = new brush();
 			}
 			else
 			{
-				var brush = sh.utils.findBrush(brushName);
-				
-				if (brush)
-				{
-					brushName = brush.name;
-					highlighter = new brush();
-				}
-				else
-				{
-					continue;
-				}
+				continue;
 			}
 			
 			code = target[propertyName];
 			
 			// remove CDATA from <SCRIPT/> tags if it's present
-			if (conf.useScriptTags)
-				code = sh.utils.stripCData(code);
+			code = sh.utils.stripCData(code);
 			
 			params['brush-name'] = brushName;
 			highlighter.highlight(code, params);
 			
 			result = highlighter.div;
 			
-			if (sh.config.debug) 
+			if (sh.debug) 
 			{
 				result = document.createElement('textarea');
 				result.value = highlighter.div.innerHTML;
@@ -1266,7 +1029,7 @@ sh.HtmlScript = function(scriptBrushName)
 	
 	if (scriptBrush.htmlScript == null)
 	{
-		sh.utils.alert(sh.config.strings.brushNotHtmlScript + scriptBrushName);
+		sh.utils.alert('Brush wasn\'t configured for html-script option: ' + scriptBrushName);
 		return;
 	}
 	
@@ -1422,18 +1185,12 @@ sh.Highlighter.prototype = {
 	createDisplayLines : function(code)
 	{
 		var lines = code.split(/\n/g),
-			firstLine = parseInt(this.getParam('first-line')),
-			padLength = this.getParam('pad-line-numbers'),
-			highlightedLines = this.getParam('highlight', []),
-			hasGutter = this.getParam('gutter')
-			;
+			firstLine = 1,
+			highlightedLines = [];
 		
 		code = '';
 		
-		if (padLength == true)
-			padLength = (firstLine + lines.length - 1).toString().length;
-		else if (isNaN(padLength) == true)
-			padLength = 0;
+		padLength = (firstLine + lines.length - 1).toString().length;
 
 		for (var i = 0; i < lines.length; i++)
 		{
@@ -1463,7 +1220,7 @@ sh.Highlighter.prototype = {
 				'<div class="line ' + lineClass + '">'
 					+ '<table>'
 						+ '<tr>'
-							+ (hasGutter ? '<td class="number"><code>' + lineNumber + '</code></td>' : '')
+							+ '<td class="number"><code>' + lineNumber + '</code></td>'
 							+ '<td class="content">'
 								+ (spaces != null ? '<code class="spaces">' + spaces.replace(' ', '&nbsp;') + '</code>' : '')
 								+ line
@@ -1531,15 +1288,14 @@ sh.Highlighter.prototype = {
 	highlight: function(code, params)
 	{
 		// using variables for shortcuts because JS compressor will shorten local variable names
-		var conf = sh.config,
-			vars = sh.vars,
+		var vars = sh.vars,
 			div,
 			divClassName,
 			tabSize,
 			important = 'important'
 			;
 
-		this.params = {};
+		this.params = params;
 		this.div = null;
 		this.lines = null;
 		this.code = null;
@@ -1553,34 +1309,12 @@ sh.Highlighter.prototype = {
 		if (code === null) 
 			code = '';
 		
-		// local params take precedence over defaults
-		this.params = sh.utils.merge(sh.defaults, params || {});
-
-		// process light mode
-		if (this.getParam('light') == true)
-			this.params.toolbar = this.params.gutter = false;
-		
 		this.div = div = this.create('DIV');
 		this.lines = this.create('DIV');
 		this.lines.className = 'lines';
 
 		className = 'syntaxhighlighter';
 		div.id = this.id;
-		
-		// make collapsed
-		if (this.getParam('collapse'))
-			className += ' collapsed';
-		
-		// disable gutter
-		if (this.getParam('gutter') == false)
-			className += ' nogutter';
-		
-		// disable line wrapping
-		if (this.getParam('wrap-lines') == false)
-		 	this.lines.className += ' no-wrap';
-
-		// add custom user style name
-		className += ' ' + this.getParam('class-name');
 		
 		// add brush alias to the class name for custom CSS
 		className += ' ' + this.getParam('brush-name');
@@ -1592,30 +1326,21 @@ sh.Highlighter.prototype = {
 			.replace(/\r/g, ' ') // IE lets these buggers through
 			;
 		
-		tabSize = this.getParam('tab-size');
-		
 		// replace tabs with spaces
-		this.code = this.getParam('smart-tabs') == true
-			? sh.utils.processSmartTabs(this.code, tabSize)
-			: sh.utils.processTabs(this.code, tabSize)
-			;
+		this.code = sh.utils.processSmartTabs(this.code, 4);
 
 		this.code = sh.utils.unindent(this.code);
 
 		// add controls toolbar
-		if (this.getParam('toolbar')) 
-		{
-			this.bar = this.create('DIV');
-			this.bar.className = 'bar';
-			this.bar.appendChild(sh.toolbar.create(this));
-			div.appendChild(this.bar);
+		this.bar = this.create('DIV');
+		this.bar.className = 'bar';
+		this.bar.appendChild(sh.toolbar.create(this));
+		div.appendChild(this.bar);
 			
-			// set up toolbar rollover
-			var bar = this.bar;
-			function hide() { bar.className = bar.className.replace('show', ''); }
-			div.onmouseover = function() { hide(); bar.className += ' show'; };
-			div.onmouseout = function() { hide(); }
-		}
+		// set up toolbar rollover
+		var bar = this.bar;
+		div.onmouseover = function() { bar.className = 'bar show'; };
+		div.onmouseout = function() { bar.className = 'bar' }
 		
 		div.appendChild(this.lines);
 	
@@ -1628,8 +1353,7 @@ sh.Highlighter.prototype = {
 		code = this.createDisplayLines(sh.utils.trim(code));
 		
 		// finally, process the links
-		if (this.getParam('auto-links'))
-			code = sh.utils.processUrls(code);
+		code = sh.utils.processUrls(code);
 
 		this.lines.innerHTML = code;
 	},

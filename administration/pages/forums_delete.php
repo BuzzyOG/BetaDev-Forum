@@ -22,7 +22,7 @@ class ForumsDelete extends adminSub{
 	public $fhelper;
 	public function __construct(){
 		parent::__construct();
-		$this->setName("Add");
+		$this->setName("Delete");
 		require_once(ADMIN_PATH."includes/classes/forumHelper.php");
 		$this->fhelper = new fHelper();
 	}
@@ -33,21 +33,17 @@ class ForumsDelete extends adminSub{
 	}
 	public function display(){
 		ob_start();
-		if(isset($_POST['post']) && $_POST['post'] == 'form'){
-			if(isSecureForm("deleteForum") && $this->fhelper->add()){
+		if(isset($_GET['fid'])){
+			if($this->fhelper->delete()){
 				$success = new tpl(ROOT_PATH.'administration/display/templates/success_redir.php');
 				$success->add("message","Forum Deleted Successfully!");
 				$success->add("url","index.php?act=forums&sub=structure");
 				echo $success->parse();
-			}else{
-				echo "Insecure!";
 			}
 		}
 		$content = new tpl(ADMIN_PATH.'display/templates/forums_delete.php');
 		$this->fhelper->get_forum_list();
-		$content->add("title", "Delete A Forum:");
 		$content->add("forum", $this->fhelper->forum_list);
-		$content->add("groups", $permgroups);
 		echo $content->parse();
 		$content = ob_get_contents();
 		ob_end_clean();

@@ -31,7 +31,8 @@ class fHelper{
 			$fid = intval($_GET['fid']);
 			$parentID = "SELECT `parent_id` FROM ".TBL_PREFIX."forums WHERE `id`=".$GLOBALS['super']->db->escape($fid);
 			$parentID = $GLOBALS['super']->db->query($parentID);
-			$parentID = $GLOBALS['super']->db->fetch_result($parentID, 0);
+			$parentID = $GLOBALS['super']->db->fetch_assoc($parentID);
+			$parentID = $parentID['parent_id'];
 		}else{
 			$fid = -1;
 			$parentID = -2;
@@ -113,7 +114,8 @@ class fHelper{
 		if ($GLOBALS['super']->db->getRowCount($sortOrder) == 0){
 			$sortOrder = 1;
 		}else{
-			$sortOrder = $GLOBALS['super']->db->fetch_result($sortOrder);
+			$sortOrder = $GLOBALS['super']->db->fetch_assoc($sortOrder);
+			$sortOrder = $sortOrder['sort_order'];
 			$sortOrder++;
 			$sortOrder = $GLOBALS['super']->db->escape($sortOrder);
 		}
@@ -147,9 +149,8 @@ class fHelper{
 		}
 		return true;
 	}
-		function delete(){
-		$forum_id = $GLOBALS['super']->db->fetch_lastid();
-		$GLOBALS['super']->db->query("DELETE FROM ".TBL_PREFIX."forums WHERE id = '".$forum_id."'");
+	function delete(){
+		$GLOBALS['super']->db->query("DELETE FROM ".TBL_PREFIX."forums WHERE id = '".$_GET['fid']."'");
 		return true;
 	}
 	function edit(){
@@ -172,7 +173,8 @@ class fHelper{
 			if ($GLOBALS['super']->db->getRowCount($sortOrder) == 0){
 				$sortOrder = 1;
 			}else{
-				$sortOrder = $GLOBALS['super']->db->fetch_result($sortOrder);
+				$sortOrder = $GLOBALS['super']->db->fetch_assoc($sortOrder);
+				$sortOrder = $sortOrder['sort_order'];
 				$sortOrder++;
 				$sortOrder = $GLOBALS['super']->db->escape($sortOrder);
 			}

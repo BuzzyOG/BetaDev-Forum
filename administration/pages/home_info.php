@@ -33,8 +33,8 @@ class HomeInfo extends adminSub{
 		$server_info[] = "PHP Version ".phpversion();
 		$sql="SELECT VERSION()";
 		$result = $this->super->db->query($sql, true);
-		$result = $this->super->db->fetch_result($result);		
-		$database_info[] = "MYSQL Version: ".$result;
+		$result = $this->super->db->fetch_assoc($result);	
+		$database_info[] = "MYSQL Version: ".$result['VERSION()'];
 		$dbsize = 0;
 		$numrows = 0;
 		$rows = $this->super->db->query("SHOW table STATUS");

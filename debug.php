@@ -18,7 +18,7 @@
  * along with DevBoard.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-if (DEBUG == 'on'){
+if (DEBUG == 'true'){
 	echo "<div>";
 	$time_start = explode(' ', PAGE_PARSE_START_TIME);
 	$time_end = explode(' ', microtime());

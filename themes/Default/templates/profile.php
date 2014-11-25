@@ -34,11 +34,10 @@
 						?>
 						<tr>
 							<td class="info">
-								<strong>Number Of Topics</strong><br />
-								(% of Total Board Topics)
+								<strong>Number Of Topics</strong>
 							</td>
 							<td class="input">
-								<?php echo $this->TopicCount?> - (<?php echo $this->TopicPercent ?>%)<br />
+								<?php echo $this->TopicCount?>
 							</td>
 						</tr>
 						<?php
@@ -47,11 +46,10 @@
 						?>
 						<tr>
 							<td class="info">
-								<strong>Number of Replies</strong><br />
-								(% of Total Board Replies)
+								<strong>Number of Replies</strong>
 							</td>
 							<td class="input">
-								<?php echo $this->PostCount ?> - (<?php echo $this->PostPercent?>%)<br />
+								<?php echo $this->PostCount ?>
 							</td>
 						</tr>
 						<?php
@@ -88,7 +86,7 @@
 								Topic Most Active in
 							</td>
 							<td class="input">
-								<a href="<?php echo FORUM_ROOT?>index.php?act=tdisplay&amp;id=<?php echo $this->FavoriteTopic['topic_id']?>"><?php echo $this->FavoriteTopic['name'] ?></a> - (<?php echo $this->FavoriteTopic['Count']?> Messages)
+								<a href="index.php?act=tdisplay&amp;id=<?php echo $this->FavoriteTopic['topic_id']?>"><?php echo $this->FavoriteTopic['name'] ?></a> - (<?php echo $this->FavoriteTopic['Count']?> Messages)
 							</td>
 						</tr>
 						<?php
@@ -101,7 +99,7 @@
 								Largest Topic Started
 							</td>
 							<td class="input">
-								<a href="<?php echo FORUM_ROOT?>index.php?act=tdisplay&amp;id=<?php echo $this->BiggestTopic['id']?>"><?php echo $this->BiggestTopic['name']?></a> - (<?php echo $this->BiggestCount?> Messages)
+								<a href="index.php?act=tdisplay&amp;id=<?php echo $this->BiggestTopic['id']?>"><?php echo $this->BiggestTopic['name']?></a> - (<?php echo $this->BiggestCount?> Messages)
 							</td>
 						</tr>
 						<?php
@@ -113,7 +111,7 @@
 								<strong>Latest Post</strong>
 							</td>
 							<td class="input">
-								<a href="<?php echo FORUM_ROOT?>index.php?act=tdisplay&amp;id=<?php echo $this->LastPost['topic_id']?>&amp;page=last"><?php echo $this->LastPost['topicName']?></a> - <?php echo $this->LastPostDate?>
+								<a href="index.php?act=tdisplay&amp;id=<?php echo $this->LastPost['topic_id']?>&amp;page=last"><?php echo $this->LastPost['topicName']?></a> - <?php echo $this->LastPostDate?>
 							</td>
 						</tr>
 						<?php

@@ -20,11 +20,11 @@
  */
 $error_array = array(
 	1 	=>	'you cannot connect to the database.',
-	2		=>	'an invalid string is called through a template include.',
-	3		=>	'a non-existant template function is called.',
-	4		=>	'the needed language file doesnt exist.',
-	5		=>	'no topic id is entered.',
-	6		=>	'no forum id is entered.',
-	7		=>	'the given configuration key does not exist.'
+	2	=>	'an invalid string is called through a template include.',
+	3	=>	'a non-existant template function is called.',
+	4	=>	'the needed language file doesnt exist.',
+	5	=>	'no topic id is entered.',
+	6	=>	'no forum id is entered.',
+	7	=>	'the given configuration key does not exist.'
 );
 ?>

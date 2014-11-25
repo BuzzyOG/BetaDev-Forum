@@ -21,7 +21,7 @@
 require_once('../init.php');
 define("INCLUDED", 1);
 if (!$super->user->can("ViewAdmin")){
-	header("Location: ".FORUM_ROOT);
+	header("Location: ../");
 	die();
 }
 define("ADMIN_PATH", dirname( __FILE__ ) ."/");
@@ -40,6 +40,14 @@ switch ($curr_act){
 	    require_once(ADMIN_PATH.'pages/configuration.php');
 	    $pageClass = new Configuration();
 	    break;
+	case "users":
+		require_once(ADMIN_PATH.'pages/users.php');
+		$pageClass = new Users();
+		break;
+	case "groups":
+		require_once(ADMIN_PATH.'pages/groups.php');
+		$pageClass = new Groups();
+		break;
 	default:
 	    require_once(ADMIN_PATH.'pages/home.php');
 	    $pageClass = new Home();
@@ -53,6 +61,8 @@ $curr_sub = ucwords($curr_sub);
 $curr_sub = $pageClass->setSub($curr_sub);
 $mainitems[] = array('text' => 'Home', 'act' => 'home', 'redirect' => 'No');
 $mainitems[] = array('text' => 'Forums', 'act' => 'forums', 'redirect' => 'No');
+//$mainitems[] = array('text' => 'Users', 'act' => 'users', 'redirect' => 'No');
+//$mainitems[] = array('text' => 'Groups', 'act' => 'groups', 'redirect' => 'No');
 $mainitems[] = array('text' => 'Configuration', 'act' => 'config', 'redirect' => 'No');
 $subitems = $pageClass->children();
 $header = new tpl(ADMIN_PATH.'display/templates/header.php');

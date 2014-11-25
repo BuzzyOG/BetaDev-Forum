@@ -47,29 +47,30 @@ class Main extends forumPage{
 		}else {
 			echo $GLOBALS['super']->user->noPerm();
 		}
-		$memberCount = "SELECT COUNT(id) FROM ".TBL_PREFIX."users";
+		$memberCount = "SELECT COUNT(id) as count FROM ".TBL_PREFIX."users";
 		$memberCount = $GLOBALS['super']->db->query($memberCount);
-		$memberCount = $GLOBALS['super']->db->fetch_result($memberCount, 0);
-		$topicCount = "SELECT COUNT(id) FROM ".TBL_PREFIX."topics";
+		$memberCount = $GLOBALS['super']->db->fetch_assoc($memberCount);
+		$topicCount = "SELECT COUNT(id) as count FROM ".TBL_PREFIX."topics";
 		$topicCount = $GLOBALS['super']->db->query($topicCount);
-		$topicCount = $GLOBALS['super']->db->fetch_result($topicCount, 0);
-		$postCount = "SELECT COUNT(id) FROM ".TBL_PREFIX."posts";
+		$topicCount = $GLOBALS['super']->db->fetch_assoc($topicCount);
+		$postCount = "SELECT COUNT(id) as count FROM ".TBL_PREFIX."posts";
 		$postCount = $GLOBALS['super']->db->query($postCount);
-		$postCount = $GLOBALS['super']->db->fetch_result($postCount, 0);
+		$postCount = $GLOBALS['super']->db->fetch_assoc($postCount);
 		$newestMember = "SELECT id
 			FROM ".TBL_PREFIX."users 
 			ORDER BY time_added DESC LIMIT 1";
 		$newestMember = $GLOBALS['super']->db->query($newestMember);
-		$newestMember = $GLOBALS['super']->db->fetch_result($newestMember);
-		$newestMember = $GLOBALS['super']->functions->getUser($newestMember, true);
+		$newestMember = $GLOBALS['super']->db->fetch_assoc($newestMember);
+		$newestMember = $GLOBALS['super']->functions->getUser($newestMember['id'], true);
 		$stats = new tpl(ROOT_PATH.'themes/Default/templates/stats.php');
-		$stats->add("MEMBERS", $memberCount);
-		$stats->add("TOPICS", $topicCount);
-		$stats->add("POSTS", $postCount-$topicCount);
+		$stats->add("MEMBERS", $memberCount['count']);
+		$stats->add("TOPICS", $topicCount['count']);
+		$stats->add("POSTS", $postCount['count']-$topicCount['count']);
 		$stats->add("NEWESTMEMBER", $newestMember);
-		$guestsOnline = "SELECT COUNT(*) FROM ".TBL_PREFIX."online WHERE `userid`=0";
-		$guestsOnline = $GLOBALS['super']->db->fetch_result($GLOBALS['super']->db->query($guestsOnline));
-		$stats->add("GUESTSONLINE", $guestsOnline);
+		$guestsOnline = "SELECT COUNT(*) as count FROM ".TBL_PREFIX."online WHERE `userid`=0";
+		$guestsOnline = $GLOBALS['super']->db->query($guestsOnline);
+		$guestsOnline = $GLOBALS['super']->db->fetch_assoc($guestsOnline);
+		$stats->add("GUESTSONLINE", $guestsOnline['count']);
 		$usersOnline = "SELECT userid
 			 FROM ".TBL_PREFIX."online
 			 WHERE userid !=0 ORDER BY `time_modified` DESC";

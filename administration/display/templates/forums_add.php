@@ -115,6 +115,8 @@
 					<th scope="col">Edit Others</th>
 					<th scope="col">Delete Self</th>
 					<th scope="col">Delete Others</th>
+					<th scope="col">Lock Threads</th>
+					<th scope="col">Sticky Threads</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -130,6 +132,8 @@
 					<td><input <?php echo (isset($group['EditOthers']) && $group['EditOthers']) ? 'checked="checked" ' : ""; ?>type="checkbox" name="perm[<?php echo $group['id']?>][EditOthers]" /></td>
 					<td><input <?php echo (isset($group['DeleteSelf']) && $group['DeleteSelf']) ? 'checked="checked" ' : ""; ?>type="checkbox" name="perm[<?php echo $group['id']?>][DeleteSelf]" /></td>
 					<td><input <?php echo (isset($group['DeleteOthers']) && $group['DeleteOthers']) ? 'checked="checked" ' : ""; ?>type="checkbox" name="perm[<?php echo $group['id']?>][DeleteOthers]" /></td>
+					<td><input <?php echo (isset($group['LockThread']) && $group['LockThread']) ? 'checked="checked" ' : ""; ?>type="checkbox" name="perm[<?php echo $group['id']?>][LockThread]" /></td>
+					<td><input <?php echo (isset($group['StickyThread']) && $group['StickyThread']) ? 'checked="checked" ' : ""; ?>type="checkbox" name="perm[<?php echo $group['id']?>][StickyThread]" /></td>
 				</tr>
 				<?php
 				}

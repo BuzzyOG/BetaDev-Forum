@@ -79,9 +79,6 @@ class topicReply extends tDisplay{
 		if (isset($_POST['formsent']) && $_POST['formsent'] == "1"){
 			if (isSecureForm("topicReply")){
 				$message = $_POST['message'];
-				if (strlen($message) <= 10){
-					$errorArray[] = "The message must be greater than 10 characters";
-				}
 				if (!count($errorArray)){
 					$topicId = $GLOBALS['super']->db->escape(intval($_GET['id']));
 					$message = $GLOBALS['super']->db->escape(strip_tags($message));
@@ -104,8 +101,8 @@ class topicReply extends tDisplay{
 					$GLOBALS['super']->db->query($updateTopicSQL);
 					$forumId = "SELECT `forum_id` FROM ".TBL_PREFIX."topics WHERE `id`=".$topicId;
 					$forumId = $GLOBALS['super']->db->query($forumId);
-					$forumId = $GLOBALS['super']->db->fetch_result($forumId);
-					$updateTopicSQL = "UPDATE ".TBL_PREFIX."forums SET `post_count` = `post_count`+1, `last_post_id`=".$postid." WHERE `id`='".$forumId."'";
+					$forumId = $GLOBALS['super']->db->fetch_assoc($forumId);
+					$updateTopicSQL = "UPDATE ".TBL_PREFIX."forums SET `post_count` = `post_count`+1, `last_post_id`=".$postid." WHERE `id`='".$forumId['forum_id']."'";
 					$GLOBALS['super']->db->query($updateTopicSQL);
 					$success = new tpl(ROOT_PATH.'themes/Default/templates/success_redir.php');
 					$success->add("message","Reply made successfully!");

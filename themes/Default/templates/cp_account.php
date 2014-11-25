@@ -35,7 +35,7 @@
 			<strong>Old Password</strong>
 		</td>
 		<td class="input">
-			<input type="password" name="old_password" value="" />
+			<input type="password" name="old_paw" value="" />
 		</td>
 	</tr>
 	<tr id="newpass">
@@ -43,7 +43,7 @@
 			<strong>New Password</strong>
 		</td>
 		<td class="input">
-			<input type="password" name="new_password" value="" />
+			<input type="password" name="new_paw" value="" />
 		</td>
 	</tr>
 	<tr>

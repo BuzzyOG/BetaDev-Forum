@@ -24,7 +24,6 @@ if( ! defined("SEC")) {
 }
 class dconnect{
 	private $database = null;
-	private  $dieOnError = false;
 	private $dbHostName = null;
 	private $dbName = null;
 	private $dbOptions = null;
@@ -69,58 +68,42 @@ class dconnect{
 	function setDatabaseHost($host){
 		$this->dbHostName = $host;
 	}
-	function checkError($msg='', $dieOnError=false){
-		if (mysql_errno()){
-			$error = $msg."MySQL error ".mysql_errno().": ".mysql_error();
-    		if($this->dieOnError || $dieOnError){	
-    			die ($error);		
-       		}else{
-    			$this->last_error = $error;
-    		}
-        }
-        return false;
-	}
 	function checkConnection(){
-			$this->last_error = '';
-			if(!isset($this->database)) $this->connect();
+		if(!isset($this->database)) $this->connect();
 	}
-	function query($sql, $dieOnError=true, $msg='Error: '){
-		global $debug;
-		$query_start = microtime();
+	function query($sql){
 		$this->checkConnection();
-		$result = mysql_query($sql);
-		$this->lastmysqlrow = -1; 
-		$this->checkError($msg.' Query Failed:' . $sql . ' :: ', $dieOnError);
-		$_start = explode(' ', $query_start);
-		$_end = explode(' ', microtime());
-		$_time = number_format(($_end[1] + $_end[0] - ($_start[1] + $_start[0])), 6);
-		$debug['QUERIES'][] = trim($sql);
-		$debug['TIME'][] = $_time;
-		return $result;
+		$result = $this->database->query($sql);
+		if($result == false) {
+			try {
+				throw new Exception("MySQL error {$result->error} <br> Query:<br> {$string}", $result->errno); 
+				echo "<h1><b>Please report this to Cblair91 immediately!</b></h1>";   
+			} catch(Exception $e) {
+				echo "Error No: {$e->getCode()} - {$e->getMessage()}<br >";
+				echo nl2br($e->getTraceAsString());
+				echo "<h1><b>Please report this to Cblair91 immediately!</b></h1>";
+			}
+		} else {
+			return $result;
+		}
 	}
 	function getRowCount(&$result){
-		if(isset($result) && !empty($result))
-				return mysql_num_rows($result);
-		return 0;
+		return $result->num_rows;
 	}
 	function fetch_lastid(){
-		return mysql_insert_id();
+		return $this->database->insert_id;
 	}
     function fetch_assoc(&$result){
-		$row = mysql_fetch_assoc($result);
-		return $row;
-	}
-	function fetch_result($result, $row=0){
-		$result = mysql_result($result, $row);
-		return $result;
+		return $result->fetch_assoc();
 	}
 	function getLastId() {
-		return mysql_insert_id();
+		return $this->database->insert_id;
 	}
-	function connect()
-	{
-			$this->database = @mysql_connect($this->dbHostName,$this->userName,$this->userPassword) or die("Can't connect: ".mysql_error());
-			@mysql_select_db($this->dbName) or die( "Unable to select database: " . mysql_error());
+	function connect() {
+		$this->database = new mysqli($this->dbHostName, $this->userName, $this->userPassword, $this->dbName);
+		if($this->database->connect_errno > 0) {
+			die("Unable to connect to site database [{$this->database->connect_error}]");
+		}
 	}
 	function resetSettings(){
 		global $INFO;
@@ -136,9 +119,9 @@ class dconnect{
 			$string = stripslashes($string);
 		}     
 		if(function_exists('mysql_real_escape_string')){
-        	$string = mysql_real_escape_string($string);
+        	$string = $this->database->real_escape_string($string);
 		}else{
-			$string = mysql_escape_string($string);
+			$string = $this->database->escape_string($string);
 		}
         if ($encapsulate){
         	$string = "'".$string."'";

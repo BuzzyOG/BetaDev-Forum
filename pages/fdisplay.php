@@ -109,15 +109,15 @@ class fDisplay extends forumPage{
 			$forumActions = array();
 			if ($GLOBALS['super']->user->can("Forum".$this->currentForum['id'],"NewTopic")){
 				$forumActions[] = array(
-					'url' =>	FORUM_ROOT."index.php?act=postTopic&amp;id=".$this->currentForum['id'],
+					'url' =>	"index.php?act=postTopic&amp;id=".$this->currentForum['id'],
 					'name'	=>	"New Topic"
 				);
 			}
 			$topBar->add("LINKS", $forumActions);
-			$totalPages = "SELECT count(id) FROM ".TBL_PREFIX."topics WHERE `forum_id`=".$this->currentForum['id'];
+			$totalPages = "SELECT count(id) as count FROM ".TBL_PREFIX."topics WHERE `forum_id`=".$this->currentForum['id'];
 			$totalPages = $GLOBALS['super']->db->query($totalPages);
-			$totalPages = $GLOBALS['super']->db->fetch_result($totalPages);
-			$totalPages = max(1, $totalPages);
+			$totalPages = $GLOBALS['super']->db->fetch_assoc($totalPages);
+			$totalPages = max(1, $totalPages['count']);
 			if (!isset($_GET['page']))
 				$curPage = 1;
 			else
@@ -140,9 +140,9 @@ class fDisplay extends forumPage{
 					$lastPostDate = $GLOBALS['super']->functions->formatDate($lastPostTime);
 					$lastposter = $GLOBALS['super']->functions->getUser($topic['last_user_id'], true);
 					$preview = $GLOBALS['super']->db->query("SELECT `message` FROM ".TBL_PREFIX."posts WHERE `topic_id`=".$topic['id']." ORDER BY `time_added` ASC LIMIT 1");
-					$preview = $GLOBALS['super']->db->fetch_result($preview);
+					$preview = $GLOBALS['super']->db->fetch_assoc($preview);
 					$bbCode = new bbCode();
-					$preview = str_replace("\n", " ", $preview);
+					$preview = str_replace("\n", " ", $preview['message']);
 					$preview = $bbCode->stripBBCode($preview);
 					$preview = dotdotdot($preview, 115);
 					$image = "themes/{$this->theme}/images/icon_old.gif";

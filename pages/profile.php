@@ -70,26 +70,21 @@ class Profile extends forumPage{
 		ob_start();
 		$bbCode = new bbCode();
 		$tpl = new tpl(ROOT_PATH.'themes/Default/templates/profile.php');
-		$posts = "SELECT count(`id`) FROM ".TBL_PREFIX."posts WHERE `user_id`=".$this->currentUser['id'];
+		$posts = "SELECT count(`id`) as count FROM ".TBL_PREFIX."posts WHERE `user_id`=".$this->currentUser['id'];
 		$posts = $GLOBALS['super']->db->query($posts);
-		$posts = $GLOBALS['super']->db->fetch_result($posts);
-		if (!$posts){
+		$posts = $GLOBALS['super']->db->fetch_assoc($posts);
+		$posts = $posts['count'];
+		if ($posts == 0){
 			$tpl->add("noActivity", true);
 		}else{
 			$tpl->add("noActivity",false);
-			$topics = "SELECT count(`id`) FROM ".TBL_PREFIX."topics WHERE `user_id`=".$this->currentUser['id'];
+			$topics = "SELECT count(`id`) as count FROM ".TBL_PREFIX."topics WHERE `user_id`=".$this->currentUser['id'];
 			$topics = $GLOBALS['super']->db->query($topics);
-			$topics = $GLOBALS['super']->db->fetch_result($topics);
+			$topics = $GLOBALS['super']->db->fetch_assoc($topics);
+			$topics = $topics['count'];
 			$tpl->add("TopicCount", $topics);
-			$totalTopics = $GLOBALS['super']->db->fetch_result($GLOBALS['super']->db->query("SELECT count(`id`) FROM ".TBL_PREFIX."topics"));
-			$topicPercent = round(($topics/$totalTopics)*100,2);
-			$tpl->add("TopicPercent", $topicPercent);
 			$numPosts = $posts - $topics;
 			$tpl->add("PostCount", $numPosts);
-			$totalPosts = $GLOBALS['super']->db->fetch_result($GLOBALS['super']->db->query("SELECT count(`id`) FROM ".TBL_PREFIX."posts")) - $totalTopics;
-			$totalPosts = max(1, $totalPosts);
-			$postPercent = round(($posts/$totalPosts)*100,2);
-			$tpl->add("PostPercent", $postPercent);
 			$daysSinceRegister = time()-$this->currentUser['time_added'];
 			$daysSinceRegister = $daysSinceRegister / (60 * 60 * 24);
 			$daysSinceRegister = ceil($daysSinceRegister);
@@ -153,10 +148,7 @@ class Profile extends forumPage{
 			$timestamp = mktime(null, null, null, $bmonth, $bday, $byear);
 			$personal[] = array("Birth Day", date("F jS, Y", $timestamp));
 		}
-		if($onlinecount > 0)
-			$page = $GLOBALS['super']->db->fetch_result($online);	
-		else 
-			$page = "Offline";
+		$page = $onlinecount > 0 ? "Online" : "Offline";
 		$tpl->add("UserName", $this->userName2Display);
 		$tpl->add("Avatar", $avatar);
 		$tpl->add("currentUser", $this->currentUser);

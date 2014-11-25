@@ -47,7 +47,7 @@
 			</div>
 		</div>
 		<div id="copyright">
-			Powered By <a href="http://betadev.co.uk">BetaDev</a> Forum software.<br />
+			Powered By <a href="http://betadev.co.uk">BetaDev</a> Forum software <span id="version"> <?php echo $this->VERSION?></span>.<br />
 			Developed by Cblair91
 		</div>
 	</div>

@@ -19,15 +19,16 @@
 	- Edit first post in a topic lets you change the title
 	- BBCode quote
 	- WYSIWYG?
-	- Syntax Highlighting (bbCode [code] [code="php"])
 	- Report post
 	- Last edited by & time
+		- Thread post time (as well as date)
 	- If thread is locked
 	- Move thread
 	- Quick reply
 		- Box at bottom
 		- Quick reply button
 		- Quote button
+	- Add config option for min character messages
 - Forum view
 	- If forum is locked
 - Search (Filter by type and date)
@@ -46,7 +47,6 @@
 	- Usergroup badges/icons
 	- Facebook, Twitter, G+ intergration
 	- Signature
-		- bbCode in signature
 		- Limit images/image size in signature
 - Finish coding in dynamic themes
 - Tidy code
@@ -56,8 +56,12 @@
 	- Fix "Top" button
 	- "Mark all forums as read" - change to dynamic url
 	- Hide "personal" on profiles if empty
-	- Double >> "BetaDev Minecraft Â» Â» General"
+	- Double >> "BetaDev Minecraft » » General"
 	- Positioning bug with "Top" when viewing people on this page
+	- "-300 seconds ago" - online list
+- Langauge support
+	- Hook into users language for error_array
+		- Change error_array to languages/<lang code>.php
 
 ## Admin TODO
 Admin:
@@ -76,3 +80,9 @@ Admin:
 - Generate an update system
 	- Update SQL tables
 	- Modify updated files
+	- 1.03 updates:
+		- "ALTER TABLE `forum_online` ADD INDEX( `ip`);"
+		- "ALTER TABLE `forum_posts` ADD `last_edited_user` INT(11) NOT NULL DEFAULT '0' AFTER `last_edited`;"
+		- "ALTER TABLE `forum_topics` ADD `locked` ENUM('0','1') NOT NULL DEFAULT '0' , ADD `sticky` ENUM('0','1') NOT NULL DEFAULT '0';"
+		- "UPDATE `forum_config` SET `value` = '1.03' WHERE `name` = 'forumVersion';"
+		- Add "sticky" and "locked" to forum_topics

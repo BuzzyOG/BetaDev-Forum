@@ -18,31 +18,6 @@
  * along with DevBoard.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- /* ----
-   TO ADD:
- Comments:
-	Account Settings
-		Display Name
-		Password
-		Email
-		Avatar
-		Signature
-	Personal Settings
-		First Name
-		Last Name
-		Gender
-		Country
-		BirthDate (Day, Month, Year)
-	Display Settings
-		Date Format
-		Time Format
-		Time Zone
-		Posts per page
-		Topics per page
-	Privacy Settings
-		Show Online
-		Send Digests
- -----*/
 if( ! defined("SEC")) {
 	echo "<p>You cannot access this page directly</p>";
 	exit();
@@ -65,7 +40,6 @@ class ControlPanel extends forumPage {
 	{
 		$js = parent::getJS();
 		$js[] = array("path" => "includes/js/controlPanel.js");
-		
 		return $js;
 	}
 	public function display()
@@ -87,22 +61,19 @@ class ControlPanel extends forumPage {
 			{
 				$errors = $this->validateForm();
 			}
-				$navitems[] = array("name"=>"Account Settings", "act"=>"acct");
-				$navitems[] = array("name"=>"Personal Settings", "act"=>"personal");
-				$navitems[] = array("name"=>"Display Settings", "act"=>"display");
-				$navitems[] = array("name"=>"Privacy Settings", "act"=>"privacy");
+			$navitems[] = array("name"=>"Account Settings", "act"=>"acct");
+			$navitems[] = array("name"=>"Personal Settings", "act"=>"personal");
+			$navitems[] = array("name"=>"Display Settings", "act"=>"display");
+			$navitems[] = array("name"=>"Privacy Settings", "act"=>"privacy");
+			$content = new tpl(ROOT_PATH.'themes/Default/templates/controlpanel.php');
+			$content->add("ERRORS", $errors);
 				
+			$content->add("NAV", $navitems);
+			$content->add("ACT", $action);
 				
-				$content = new tpl(ROOT_PATH.'themes/Default/templates/controlpanel.php');
-				$content->add("ERRORS", $errors);
+			$content->add("USERINFO", $GLOBALS['super']->user);
 				
-				$content->add("NAV", $navitems);
-				$content->add("ACT", $action);
-				
-				$content->add("USERINFO", $GLOBALS['super']->user);
-				
-				$content->parse();
-			//}
+			$content->parse();
 		}
 		
 		$output = ob_get_contents();
@@ -115,8 +86,8 @@ class ControlPanel extends forumPage {
 			$displayname = (isset($_POST['displayname'])) ? $_POST['displayname'] : "";
 			$email = (isset($_POST['email'])) ? $_POST['email'] : "";
 			$signature = (isset($_POST['signature'])) ? $_POST['signature'] : "";
-			$oldpass = (isset($_POST['old_password'])) ? $_POST['old_password'] : "";
-			$newpass = (isset($_POST['new_password'])) ? $_POST['new_password'] : "";
+			$oldpass = (isset($_POST['old_paw'])) ? $_POST['old_paw'] : "";
+			$newpass = (isset($_POST['new_paw'])) ? $_POST['new_paw'] : "";
 			if ($displayname != $GLOBALS['super']->user->displayname){
 				$query = $GLOBALS['super']->db->query("SELECT `id` FROM ".TBL_PREFIX."users WHERE `displayname`='".$displayname."'");
 				if ($GLOBALS['super']->db->getRowCount($query) > 0){
@@ -135,8 +106,8 @@ class ControlPanel extends forumPage {
 			if ($oldpass != ""){
 				$username = $GLOBALS['super']->db->escape($GLOBALS['super']->user->username);
 				$query = $GLOBALS['super']->db->query("SELECT `id` FROM ".TBL_PREFIX."users WHERE `username`='".$username."' AND `password`='".$pass."'");
-				$id = $GLOBALS['super']->db->fetch_result($query);
-				if ($id != $GLOBALS['super']->user->id)
+				$id = $GLOBALS['super']->db->fetch_assoc($query);
+				if ($id['id'] != $GLOBALS['super']->user->id)
 					$errors[] = "To change your password, you must provide your old password.";
 				elseif (strlen($newpass) <= 5)
 					$errors[] = "Your new password must be greater than 5 characters.";
@@ -145,6 +116,7 @@ class ControlPanel extends forumPage {
 				}
 			}
 			$newAvatar = false;
+			$resizeAvatar = false;
 			if (isset($_FILES["new_avatar"]) && $_FILES['new_avatar']['name'] != "" && is_uploaded_file($_FILES['new_avatar']['tmp_name'])){
 				$name = $_FILES['new_avatar']['name'];
 				$path = pathinfo($name);
@@ -152,12 +124,13 @@ class ControlPanel extends forumPage {
 				$info = getimagesize($_FILES['new_avatar']['tmp_name']);
 				if (!in_array($path["extension"], array("jpg","jpeg","gif","png"))){
 					$errors[] = "Avatars may only have the extension .jpg, .jpeg, .gif, or .png";
-				}elseif ($size >= 100*1024){
+				}elseif ($size >= 10000*1024){
 					$errors[] = "Avatars must be less than 100KB.";
-				}elseif ($info[0] > 60 || $info[1] > 60){
-					$erorrs[] = "Avatars cannot be larger than 60px by 60px";
 				}else{
 					$newAvatar = true;
+				}
+				if ($info[0] > 60 || $info[1] > 60){
+					$resizeAvatar = true;
 				}
 			}
 			if (count($errors) == 0){
@@ -171,9 +144,13 @@ class ControlPanel extends forumPage {
 					$info = pathinfo($_FILES['new_avatar']['name']);
 					$newPath =  "images/avatar_".$GLOBALS['super']->user->id.".".$info["extension"];
 					move_uploaded_file($_FILES['new_avatar']['tmp_name'], ROOT_PATH.$newPath);
-					$GLOBALS['super']->db->query("INSERT INTO ".TBL_PREFIX."images (`name`, `url`) VALUES ('Avatar', '".FORUM_ROOT.$newPath."')");
+					$GLOBALS['super']->db->query("INSERT INTO ".TBL_PREFIX."images (`name`, `url`) VALUES ('Avatar', '{$newPath}')");
 					$id = $GLOBALS['super']->db->fetch_lastid();
 					$GLOBALS['super']->user->avatar = $id;
+					if ($resizeAvatar) {
+						require_once("includes/functions/smart_resize.php");
+						smart_resize_image($newPath, null, 60, 60, false, $newPath, false, false, 100);
+					}
 				}
 			}
 		}elseif ($_POST['action'] == "personal"){

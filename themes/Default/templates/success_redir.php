@@ -10,6 +10,5 @@
 		}			
 		?>
 	You are now leaving BetaDev<br />
-	If this doesn't work, click <a href="<?php echo $this->url?>">here</a> to continue.
+	Click <a href="<?php echo $this->url?>">here</a> to continue.
 </div>
-<script type="text/javascript">redir("<?php echo $this->url?>");</script>

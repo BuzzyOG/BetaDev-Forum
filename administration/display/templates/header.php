@@ -20,7 +20,7 @@
 	<body>
 		<div id="container">
 			<div id="header">
-				<img src="<?php echo FORUM_ROOT?>themes/Default/images/header.jpg" alt="" />
+				<img src="../themes/<?= $GLOBALS['super']->functions->getTheme(); ?>/images/header.jpg" alt="" />
 			</div>
 			<div id="navbar">
 				<ul class="adminpages">

@@ -21,7 +21,7 @@
 define("SEC", true);
 define("INCLUDED", 1);
 define("ROOT_PATH", dirname( __FILE__ ) ."/");
-define("VERSION", 1.01);
+define("VERSION", 1.03);
 require_once('../includes/classes/dconnect.php');
 require_once('../includes/classes/functions.php');
 class Installer{
@@ -211,7 +211,8 @@ define("TIMEZONENUM", "-7");
 	  `ip` varchar(15) NOT NULL DEFAULT '',
 	  `sessionid` varchar(36) NOT NULL DEFAULT '',
 	  `time_modified` int(10) NOT NULL DEFAULT 0,
-	  `page` varchar(100) NOT NULL DEFAULT ''
+	  `page` varchar(100) NOT NULL DEFAULT '',
+	  PRIMARY KEY (`ip`)
 	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 	";
 	$queries[] =
@@ -243,6 +244,7 @@ define("TIMEZONENUM", "-7");
 	  `user_id` int(11) NOT NULL DEFAULT 0,
 	  `time_added` int(10) NOT NULL DEFAULT 0,
 	  `last_edited` int(10) NOT NULL DEFAULT 0,
+	  `last_edited_user` int(11) NOT NULL DEFAULT 0,
 	  `message` text NOT NULL,
 	  PRIMARY KEY (`id`),
 	  FULLTEXT KEY `message` (`message`)
@@ -271,12 +273,14 @@ define("TIMEZONENUM", "-7");
 	  `time_added` int(10) NOT NULL DEFAULT 0,
 	  `time_modified` int(10) NOT NULL DEFAULT 0,
 	  `last_user_id` int(11) NOT NULL DEFAULT 0,
+	  `locked` enum('0','1') NOT NULL DEFAULT '0',
+	  `sticky` enum('0','1') NOT NULL DEFAULT '0',
 	  PRIMARY KEY (`id`),
 	  FULLTEXT KEY `name` (`name`)
 	) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
 	$queries[] =
-	"INSERT INTO ".TBL_PREFIX."topics (`name`, `forum_id`, `user_id`, `post_count`, `view_count`, `time_added`, `time_modified`, `last_user_id`) VALUES
-	('Welcome to BetaDev Board', 2, 1, 0, 0, ".$timestamp.", ".$timestamp.", 1)";
+	"INSERT INTO ".TBL_PREFIX."topics (`name`, `forum_id`, `user_id`, `post_count`, `view_count`, `time_added`, `time_modified`, `last_user_id`, `sticky`) VALUES
+	('Welcome to BetaDev Board', 2, 1, 0, 0, ".$timestamp.", ".$timestamp.", 1, 1)";
 	$queries[] =
 	"CREATE TABLE IF NOT EXISTS ".TBL_PREFIX."users (
 	  `id` int(11) NOT NULL auto_increment,

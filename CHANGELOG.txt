@@ -1,0 +1,37 @@
+V1.03:
+- Fixed a strict standard bug on search page
+- Added "locked" and "sticky" to database forum_topics
+- Set `ip` to primary key for forum_online
+- Fixed up the regex syntax for [code] and [icode]
+- Fixed bbCode in signature
+- Added "edited by" on posts
+- Updated SyntaxHilighter brushes
+- Did modifications to SyntaxHilighter, added to about and modified copyright.
+- Merged SyntaxHilighter CSS (now all in shCore.css)
+- Rewrote SyntaxHilighter JS and removed shLegacy.js (all in shCore.js now)
+- Reworked the header script to correctly tab now
+- Added type "text" to header JS/CSS (Example usage in: SyntaxHiliter)
+- Starting work on HTML5
+
+V1.02:
+- Added version to Dynamic theme homepage
+- Added avatar resizing
+- Fixed "Array" stats bug on homepage
+- Fixed a guest error appearing on homepage
+- Fixed a bug with changing password
+- Removed "Message lower than 10 characters" error
+- Fixed a editing avatar upload bug
+
+V1.01:
+- Added forums delete (Administrators)
+- Started work on dynamic themes
+- Started work on users and groups editing (Administrators)
+- Changed over to sqlite (will add options for sql for older versions)
+- Fixed installation SQL bug
+- Tidied the TODO list
+- Fixed BetaDev url
+- Made links dynamic (not based on config)
+- Fixed admin homepage CSS
+
+V1.0:
+- Initial push

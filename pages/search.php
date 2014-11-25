@@ -68,7 +68,8 @@ class Search extends forumPage{
 				WHERE MATCH(username) AGAINST('".$query."')         
 				ORDER BY score DESC ".$extra;
 			}
-			$numRows = $GLOBALS['super']->db->getRowCount($GLOBALS['super']->db->query(getSearch($query)));
+			$count = $GLOBALS['super']->db->query(getSearch($query));
+			$numRows = $GLOBALS['super']->db->getRowCount($count);
 			$totalPages = max(1, $numRows);
 			if (!isset($_GET['page']))
 				$curPage = 1;

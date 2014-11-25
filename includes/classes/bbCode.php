@@ -140,9 +140,9 @@ class bbCode{
 		$string = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/is", array($this, 'pre'), $string);
 		$string = preg_replace_callback("/\[indent\](.*?)\[\/indent\]/is", array($this, 'indent'), $string);
 		$string = preg_replace_callback('/\[code\](.*?)\[\/code\]/is', array($this, 'codeIn'),$string);
-		$string = preg_replace_callback('/\[code=(&quot;)?(.*?)(&quot;)?\](.*?)\[\/code\]/is', array($this, 'codeOut'),$string);
+		$string = preg_replace_callback('/\[code=(&quot;|")?(.*?)(&quot;|")?\](.*?)\[\/code\]/is', array($this, 'codeOut'),$string);
 		$string = preg_replace_callback('/\[icode\](.*?)\[\/icode\]/is', array($this, 'icodeIn'),$string);
-		$string = preg_replace_callback('/\[icode=(&quot;)?(.*?)(&quot;)?\](.*?)\[\/icode\]/is', array($this, 'icodeOut'),$string);
+		$string = preg_replace_callback('/\[icode=(&quot;|")?(.*?)(&quot;|")?\](.*?)\[\/icode\]/is', array($this, 'icodeOut'),$string);
 		$string = nl2br($string);
 		$string = str_replace("\t",str_repeat("&nbsp;",4), $string);
 		if ($return)

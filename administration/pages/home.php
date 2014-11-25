@@ -33,7 +33,7 @@ class Home extends adminPage{
 	}
 	public function children(){
 		$children[] = array('text' => 'Info', 'act' => 'info', 'redirect' => 'No');
-		$children[] = array('text' => 'Board', 'act' => 'board', 'redirect' => 'Yes', 'link' => FORUM_ROOT);
+		$children[] = array('text' => 'Board', 'act' => 'board', 'redirect' => 'Yes', 'link' => '../');
 		return $children;
 	}
 	public function setSub($sub){

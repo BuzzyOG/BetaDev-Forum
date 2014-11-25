@@ -61,7 +61,7 @@ class forumPage{
 	}
 	
 	public function getCSS(){
-		$css[] = array("path" => "themes/Default/main.css");
+		$css[] = array("path" => "themes/{$GLOBALS['super']->functions->getTheme()}/main.css");
 		return $css;
 	}
 	

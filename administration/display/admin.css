@@ -138,7 +138,6 @@ div.left_section{
 	width: 283px;
 	text-align: center;
 	float: left;
-	border-right: 4px solid #5A7497;
 	min-height: 100px;
 }
 
@@ -146,7 +145,9 @@ div.middle_section{
 	width: 286px;
 	float: left;
 	text-align: center;
-	border-right: 4px solid #5A7497;
+	border-color: #5A7497;
+	border-style: solid;
+	border-width: 0 4px;
 	min-height: 100px;
 }
 

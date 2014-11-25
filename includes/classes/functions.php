@@ -67,39 +67,41 @@ class functions{
 		$extra = "";
 		$time = time();
 		$diff = $time - $date;
-		if($diff < 60){
+		if( $diff < 60 ) {
 			return "Less than 1 minute ago";
-		}else if($diff < 60 * 60){
-			$result = floor($diff/60);
-			$plural = plural($result);
-			if (!$short)
-				$extra = " (".$result." minute".$plural." ago)";
-			return date($timeformat,$date).$extra;
-		}else if($diff < 60 * 60 * 24){
-			$result = floor($diff/(60*60));
-			$plural = plural($result);
-			if (date($dateformat,$date) != date($dateformat,$time)){
-				$text = date($dateformat,$date);
-			}else{
-				$text = date($timeformat,$date);
+		} else if( $diff < 60 * 60 ) {
+			$result = floor( $diff / 60 );
+			$plural = plural( $result );
+			if( !$short ) {
+				$extra = " ({$result} minute{$plural} ago)";
 			}
-			if (!$short)
-				$extra = " (".$result." hour".$plural." ago)";
-			return $text.$extra;
-		}else if($diff < 60 * 60 * 24 * 30){
-			$result = floor($diff/(60*60*24));
-			$plural = plural($result);
+			return date( $timeformat, $date ) . $extra;
+		} else if( $diff < 60 * 60 * 24 ) {
+			$result = floor( $diff / ( 60 * 60 ) );
+			$plural = plural( $result );
+			$text = "";
+			if( date( $dateformat, $date ) != date( $dateformat, $time ) ) {
+				$text = date( $dateformat, $date ) . " ";
+			}
+			$text .= date( $timeformat, $date );
+			if( !$short ) {
+				$extra = " ({$result} hour{$plural} ago)";
+			}
+			return $text . $extra;
+		} else if( $diff < 60 * 60 * 24 * 30 ) {
+			$result = floor( $diff / ( 60 * 60 * 24 ) );
+			$plural = plural( $result );
 			$extra = "";
-			if (!$short)
-				$extra = " ($result day$plural ago)";
-
-			return date($dateformat,$date).$extra;
+			if( !$short ) {
+				$extra = " ({$result} day{$plural} ago)";
+			}
+			return date( $dateformat, $date) . date($timeformat, $date) . $extra;
 		}
-		$result = floor($diff/(60*60*24*30));
-		$plural = plural($result);
+		$result = floor( $diff / ( 60 * 60 * 24 * 30 ) );
+		$plural = plural( $result );
 		if (!$short)
-		$extra = " ($result month$plural ago)";
-		return date($dateformat,$date).$extra;
+		$extra = " ({$result} month{$plural} ago)";
+		return date( $dateformat, $date ) . $extra;
 	}
 	function formatTime($date){
 		$time = time();
@@ -139,7 +141,7 @@ class functions{
 			$name,
 			$user['color'],
 			'<a title="'.$user['name'].'" href="?act=member&amp;id='.$id.'"><span style="color:'.$user["color"].'">'.$name.'</span></a>'
-			);
+		);
 	}
 	function user2display($username, $displayname){
 		if ($displayname != ""){
@@ -187,7 +189,7 @@ class functions{
 			if ($this->super->db->getRowCount($query)){
 				$user = $this->super->db->fetch_assoc($query);
 				$user['formatted'] = $this->formatUser($user['groupname'], $user["color"], $user['id'], $user['username'],$user['displayname'], $both);
-			$this->usersDisplayed[$user['id']] = $user;
+				$this->usersDisplayed[$user['id']] = $user;
 			}
 		}
 		if ($formatted)

@@ -54,7 +54,7 @@ class Login extends forumPage{
 				$success = new tpl(ROOT_PATH.'themes/Default/templates/success_redir.php');
 				$success->add("message", "Logged In Successfully");
 				if (!isset($_SESSION['loginredirect']))
-					$redirect = FORUM_ROOT;
+					$redirect = "index.php";
 				else
 					$redirect = $_SESSION['loginredirect'];
 				$success->add("url", $redirect);
@@ -64,21 +64,21 @@ class Login extends forumPage{
 			}else{
 				$error = new tpl(ROOT_PATH.'themes/Default/templates/error.php');
 				$error->add("error_message", "Incorrect Username or Password");
-				echo $error->parse();	
+				echo $error->parse();
 			}
 		}elseif(isset($_GET['do']) && $_GET['do'] == "out"){
 			$display = false;
 			$success = new tpl(ROOT_PATH.'themes/Default/templates/success_redir.php');
 			$success->add("message", "Logged Out Successfully");
-			$success->add("url", FORUM_ROOT);
-			echo $success->parse();	
+			$success->add("url", "index.php");
+			echo $success->parse();
 		}
 		if ($display){
 			if (isset($_SERVER['HTTP_REFERER']) && !isset($_SESSION['loginredirect'])){
 				$_SESSION['loginredirect'] = $_SERVER['HTTP_REFERER'];
 			}
 			$login = new tpl(ROOT_PATH.'themes/Default/templates/login.php');
-			echo $login->parse();	
+			echo $login->parse();
 		}
 		$output = ob_get_contents();
 		ob_end_clean();

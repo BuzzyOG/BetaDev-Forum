@@ -113,8 +113,6 @@ switch($current_page){
 $super->user->updateActive($pageClass);
 $styleSheet = $super->functions->getTheme();
 $styleDir = 'themes/'.$styleSheet;
-$Doctype_normal = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-$Doctype_mobile = '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">';
 $header = new tpl(ROOT_PATH.$styleDir.'/templates/header.php');
 $header->add("TITLE", $pageClass->getTitle());
 $isIphone = false;
@@ -123,10 +121,6 @@ if (isset($_SERVER['HTTP_USER_AGENT'])){
 	$isIphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone") !== false;
 	$isIpod = strpos($_SERVER['HTTP_USER_AGENT'], "iPod") !== false;
 }
-if (isset($_SERVER['HTTP_USER_AGENT']) && ($isIpod || $isIphone))
-	$header->add("DOCTYPE", $Doctype_mobile);
-else
-	$header->add("DOCTYPE", $Doctype_normal);
 $css = $pageClass->getCSS();
 if (isset($_SERVER['HTTP_USER_AGENT']) && ($isIpod || $isIphone) && file_exists($styleDir.'/iPhone.css')){
 	$css[] = array('path' => $styleDir.'/iPhone.css');
@@ -169,16 +163,16 @@ $curTime = date("g:i A");
 $footer->add("time", $curTime);
 $usersOnPage = "SELECT * FROM ".TBL_PREFIX."online WHERE page='".$GLOBALS['super']->db->escape($pageClass->onlineName())."' AND userid != 0";
 $usersOnPage = $super->db->query($usersOnPage);
-$guestsOnPage = "SELECT count(*) FROM ".TBL_PREFIX."online WHERE `page`='".$GLOBALS['super']->db->escape($pageClass->onlineName())."' AND `userid`=0";
+$guestsOnPage = "SELECT count(*) as count FROM ".TBL_PREFIX."online WHERE `page`='".$GLOBALS['super']->db->escape($pageClass->onlineName())."' AND `userid`=0";
 $guestsOnPage = $super->db->query($guestsOnPage);
-$guestsOnPage = $super->db->fetch_result($guestsOnPage);
+$guestsOnPage = $super->db->fetch_assoc($guestsOnPage);
 $pageUsers = array();
 while($user = $super->db->fetch_assoc($usersOnPage)){
 	$pageUsers[] = $super->functions->getUser($user['userid'], true);
 }
 $footer->add("UsersOnPage", $pageUsers);
-$footer->add("GuestsOnPage", $guestsOnPage);
-$footer->add("PBB_VERSION", $super->config->forumVersion);
+$footer->add("GuestsOnPage", $guestsOnPage['count']);
+$footer->add("VERSION", $super->config->forumVersion);
 echo $footer->parse();
 require_once('debug.php');
 ?>
